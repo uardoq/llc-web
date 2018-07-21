@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>This is a Header</h1>
+    <div th:unless="${#lists.isEmpty(testimonials)}">
+        <dl th:each="testimonial : ${testimonials}">
+            <dt>
+                <span th:text="${testimonial.id}">Id</span>,
+                <span th:text="${testimonial.poster}">Poster</span>,
+                <span th:text="${testimonial.content}">Content</span>,
+                <span th:text="${testimonial.rating}">Rating</span> / [[${maxVal}]]
+            </dt>
+        </dl>
+    </div>
+    <div th:if="${#lists.isEmpty(testimonials)}">
+        <p>There are no testimonials</p>
+    </div>
+
+    <form action="#" th:action="@{/submitContactForm}" th:object="${contactForm}" method="post">
+        <p>Name: <input type="text" th:field="*{name}" /> <p th:if="${#fields.hasErrors('name')}" th:text="ERRORS"></p></p>
+        <p>Email: <input type="text" th:field="*{email}" /></p>
+        <p>Message: <textarea th:field="*{message}"  id="" cols="30" rows="10"></textarea> </p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset"/></p>
+    </form>
+
+</body>
+</html>
