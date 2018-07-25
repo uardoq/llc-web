@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatasourceInitializer implements ApplicationListener<ApplicationReadyEvent> {
 
-    @Autowired
-    private TestimonialsRepository testimonialsRepository;
+    private final TestimonialsRepository testimonialsRepository;
 
+    @Autowired
     private DatasourceInitializer(TestimonialsRepository testimonialsRepository) {
         this.testimonialsRepository = testimonialsRepository;
     }
