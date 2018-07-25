@@ -2,19 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script th:src="@{/scripts/submitContactForm.js}" ></script>
+    <title>Const Cont Web</title>
 </head>
 <body>
-    <h1>This is a Header</h1>
+    <h1 th:text="#{site.title}">Title Here</h1>
     <div th:unless="${#lists.isEmpty(testimonials)}">
         <dl th:each="testimonial : ${testimonials}">
             <dt>
                 <span th:text="${testimonial.id}">Id</span>,
                 <span th:text="${testimonial.poster}">Poster</span>,
                 <span th:text="${testimonial.content}">Content</span>,
-                <span th:text="${testimonial.rating}">Rating</span> / [[${maxVal}]]
+                <span th:text="${testimonial.rating}">Rating</span> / [[#{testimonial.max-rating}]]
             </dt>
         </dl>
     </div>
@@ -45,5 +43,7 @@
 
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script th:src="@{/scripts/submitContactForm.js}" ></script>
 </body>
 </html>

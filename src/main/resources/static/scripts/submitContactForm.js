@@ -44,9 +44,9 @@ $(document).ready(function () {
 
         // get form values
         const formData = {
-            name: $("#contactName").val(),
-            email: $("#contactEmail").val(),
-            message: $("#contactMessage").val()
+            name: $("#contactName").val().trim(),
+            email: $("#contactEmail").val().trim(),
+            message: $("#contactMessage").val().trim()
         };
 
         // post request
