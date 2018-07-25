@@ -7,11 +7,43 @@ $(document).ready(function () {
     });
 
     function submitContactForm() {
-
         const HTTP_UNPROCESSABLE_ENTITY = 422;
 
+        function clearForm() {
+            $("#contactName").val("");
+            $("#contactEmail").val("");
+            $("#contactMessage").val("");
+        }
+
+        const onSuccess = function () {
+            $("#postResultDiv").html(
+                "<p style='background-color:#479aff; color:white; padding:20px 20px 20px 20px'>"
+                + "We will email you within 24 hours<br>"
+                + "</p>");
+            clearForm();
+        };
+
+        const onError = function (res) {
+            // get server response
+            let json = res.responseJSON;
+            let errors = res.status === HTTP_UNPROCESSABLE_ENTITY ?
+                // build html list of all field and error pairs
+                Object.keys(json).reduce((htmlString, field) =>
+                    htmlString + "Field: " + field + " Error: " + json[field] + "<br>", "")
+                :
+                // other server error, 5xx
+                "We were unable to send your message at this time. Please try again later";
+
+            // wrap list of errors
+            let errorHTML =
+                "<p style='background-color:#479aff; color:white; padding:20px 20px 20px 20px'>"
+                + errors
+                + "</p>";
+            $("#postResultDiv").html(errorHTML);
+        };
+
         // get form values
-        let formData = {
+        const formData = {
             name: $("#contactName").val(),
             email: $("#contactEmail").val(),
             message: $("#contactMessage").val()
@@ -24,39 +56,9 @@ $(document).ready(function () {
             url: window.location + "submitContactForm",
             data: JSON.stringify(formData),
             dataType: 'json',
-            success: function () {
-                $("#postResultDiv").html(
-                    "<p style='background-color:#479aff; color:white; padding:20px 20px 20px 20px'>"
-                    + "We will email you within 24 hours<br>"
-                    + "</p>");
-                clearForm();
-            },
-            error: function (res) {
-                // get server response
-                let json = res.responseJSON;
-                let errors = res.status === HTTP_UNPROCESSABLE_ENTITY ?
-                    // build html list of all field and error pairs
-                    Object.keys(json).reduce((htmlString, field) =>
-                        htmlString + "Field: " + field + "Error: " + json[field] + "<br>", "")
-                    :
-                    // other server error
-                    "We are unable to process your contact message at this time. Please try again Later";
-
-                // wrap list of errorss
-                let errorHTML =
-                    "<p style='background-color:#479aff; color:white; padding:20px 20px 20px 20px'>"
-                    + errors
-                    + "</p>";
-                $("#postResultDiv").html(errorHTML);
-            }
-
+            success: onSuccess,
+            error: onError
         });
-
     }
 
-    function clearForm() {
-        $("#contactName").val("");
-        $("#contactEmail").val("");
-        $("#contactMessage").val("");
-    }
 });
