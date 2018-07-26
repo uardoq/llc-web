@@ -2,48 +2,57 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Const Cont Web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>title</title>
 </head>
 <body>
-    <h1 th:text="#{site.title}">Title Here</h1>
-    <div th:unless="${#lists.isEmpty(testimonials)}">
-        <dl th:each="testimonial : ${testimonials}">
-            <dt>
-                <span th:text="${testimonial.id}">Id</span>,
-                <span th:text="${testimonial.poster}">Poster</span>,
-                <span th:text="${testimonial.content}">Content</span>,
-                <span th:text="${testimonial.rating}">Rating</span> / [[#{testimonial.max-rating}]]
-            </dt>
-        </dl>
+
+<header th:replace="/fragments/fragments.html :: header"></header>
+
+<h1 th:text="#{site.title}">Title Here</h1>
+<div th:unless="${#lists.isEmpty(testimonials)}">
+    <dl th:each="testimonial : ${testimonials}">
+        <dt>
+            <span th:text="${testimonial.id}">Id</span>,
+            <span th:text="${testimonial.poster}">Poster</span>,
+            <span th:text="${testimonial.content}">Content</span>,
+            <span th:text="${testimonial.rating}">Rating</span> / [[#{testimonial.max-rating}]]
+        </dt>
+    </dl>
+</div>
+<div th:if="${#lists.isEmpty(testimonials)}">
+    <p>There are no testimonials</p>
+</div>
+
+<form id="contactUsForm" action="#" th:action="@{/submitContactForm}" th:object="${contactForm}" method="post">
+    <p>
+        <label for="contactName">Name:</label>
+        <input id="contactName" type="text" th:field="*{name}"/>
+    </p>
+    <p>
+        <label for="contactEmail">Email:</label>
+        <input id="contactEmail" type="text" th:field="*{email}"/>
+    </p>
+    <p>
+        <label for="contactMessage">Message:</label>
+        <textarea id="contactMessage" th:field="*{message}" cols="30" rows="10"></textarea>
+    </p>
+    <p>
+        <input type="submit" value="Submit"/>
+    </p>
+
+    <div id="postResultDiv">
+
     </div>
-    <div th:if="${#lists.isEmpty(testimonials)}">
-        <p>There are no testimonials</p>
-    </div>
 
-    <form id="contactUsForm" action="#" th:action="@{/submitContactForm}" th:object="${contactForm}" method="post">
-        <p>
-            <label for="contactName">Name:</label>
-            <input id="contactName" type="text" th:field="*{name}"/>
-        </p>
-        <p>
-            <label for="contactEmail">Email:</label>
-            <input id="contactEmail" type="text" th:field="*{email}" />
-        </p>
-        <p>
-            <label for="contactMessage">Message:</label>
-            <textarea id="contactMessage" th:field="*{message}" cols="30" rows="10"></textarea>
-        </p>
-        <p>
-            <input type="submit" value="Submit"/>
-        </p>
+    <footer th:replace="/fragments/fragments.html :: footer"></footer>
 
-        <div id="postResultDiv">
+</form>
 
-        </div>
-
-    </form>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script th:src="@{/scripts/submitContactForm.js}" ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script th:src="@{/scripts/submitContactForm.js}"></script>
 </body>
 </html>

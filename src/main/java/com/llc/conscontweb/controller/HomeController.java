@@ -27,9 +27,6 @@ public class HomeController {
     private TestimonialsRepository testimonialsRepository;
     private ContactService contactService;
 
-//    @Value("${testimonial.max-rating}")
-//    private Float maxRating;
-
     /* Constructor Dependency Injection */
     @Autowired
     public HomeController(TestimonialsRepository testimonialsRepository, ContactService contactService) {
@@ -43,7 +40,6 @@ public class HomeController {
         List<Testimonial> testimonials = testimonialsRepository.findAll();
         if (!testimonials.isEmpty()) {
             model.addAttribute("testimonials", testimonials);
-//            model.addAttribute("maxVal", maxRating);
             // this ContactForm object gets bound to the contact form
             model.addAttribute("contactForm", new ContactForm());
         }
@@ -76,6 +72,9 @@ public class HomeController {
         }
     }
 
+    /**
+     * Returns a map of the fields as keys and error description as values.
+     */
     private Map<String, String> getErrorsInASaneFormat(final BindingResult result) {
         return new HashMap<String, String>() {{
             for (FieldError error : result.getFieldErrors()) {
