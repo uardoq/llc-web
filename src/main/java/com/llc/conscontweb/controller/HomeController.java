@@ -2,10 +2,10 @@ package com.llc.conscontweb.controller;
 
 import com.llc.conscontweb.model.ContactForm;
 import com.llc.conscontweb.model.Testimonial;
-import com.llc.conscontweb.repository.TestimonialsRepository;
 import com.llc.conscontweb.service.ContactService;
+import com.llc.conscontweb.service.SendContactMailService;
+import com.llc.conscontweb.service.TestimonialsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,20 +24,22 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
-    private TestimonialsRepository testimonialsRepository;
+    private TestimonialsService testimonialsService;
     private ContactService contactService;
+    private SendContactMailService sendContactMailService;
 
     /* Constructor Dependency Injection */
     @Autowired
-    public HomeController(TestimonialsRepository testimonialsRepository, ContactService contactService) {
-        this.testimonialsRepository = testimonialsRepository;
+    public HomeController(TestimonialsService testimonialsService, ContactService contactService, SendContactMailService sendContactMailService) {
+        this.testimonialsService = testimonialsService;
         this.contactService = contactService;
+        this.sendContactMailService = sendContactMailService;
     }
 
     @GetMapping(path = {"/"})
     public String showHomepage(Model model) {
         // get testimonials from repo
-        List<Testimonial> testimonials = testimonialsRepository.findAll();
+        List<Testimonial> testimonials = testimonialsService.getAllTestimonials();
         if (!testimonials.isEmpty()) {
             model.addAttribute("testimonials", testimonials);
             // this ContactForm object gets bound to the contact form
@@ -50,6 +52,7 @@ public class HomeController {
 
     /**
      * Handle client request made when they submit a contact form.
+     *
      * @return if input is valid return 200, else return 422 and FieldErrors
      */
     @ResponseBody
@@ -67,6 +70,7 @@ public class HomeController {
             System.out.println("From submitContactForm(): processing contact form");
             System.out.println("From submitContactForm(): 200, " + contactForm.toString());
             contactService.processContactForm(contactForm);
+            sendContactMailService.notifyUs(contactForm);
             // client expects json, so pass in an empty object
             return new ResponseEntity<>("{}", HttpStatus.OK);
         }

@@ -2,6 +2,7 @@ package com.llc.conscontweb.service;
 
 import com.llc.conscontweb.model.ContactForm;
 import com.llc.conscontweb.repository.ContactFormsRepository;
+import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +23,5 @@ public class ContactServiceImpl implements ContactService {
     public void processContactForm(ContactForm contactEntry) {
         // save contact to ContactFormsRepository repository
         contactFormsRepository.save(contactEntry);
-        List<ContactForm> all = contactFormsRepository.findAll();
-
-        // TODO: send email
-
     }
 }

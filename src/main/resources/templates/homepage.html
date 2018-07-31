@@ -3,56 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/carousel.css}">
+    <link rel="stylesheet" th:href="@{/css/floating_labels.css}">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <title>title</title>
 </head>
 <body>
 
 <header th:replace="/fragments/fragments.html :: header"></header>
 
-<h1 th:text="#{site.title}">Title Here</h1>
-<div th:unless="${#lists.isEmpty(testimonials)}">
-    <dl th:each="testimonial : ${testimonials}">
-        <dt>
-            <span th:text="${testimonial.id}">Id</span>,
-            <span th:text="${testimonial.poster}">Poster</span>,
-            <span th:text="${testimonial.content}">Content</span>,
-            <span th:text="${testimonial.rating}">Rating</span> / [[#{testimonial.max-rating}]]
-        </dt>
-    </dl>
-</div>
-<div th:if="${#lists.isEmpty(testimonials)}">
-    <p>There are no testimonials</p>
-</div>
+<main role="main">
 
-<form id="contactUsForm" action="#" th:action="@{/submitContactForm}" th:object="${contactForm}" method="post">
-    <p>
-        <label for="contactName">Name:</label>
-        <input id="contactName" type="text" th:field="*{name}"/>
-    </p>
-    <p>
-        <label for="contactEmail">Email:</label>
-        <input id="contactEmail" type="text" th:field="*{email}"/>
-    </p>
-    <p>
-        <label for="contactMessage">Message:</label>
-        <textarea id="contactMessage" th:field="*{message}" cols="30" rows="10"></textarea>
-    </p>
-    <p>
-        <input type="submit" value="Submit"/>
-    </p>
-
-    <div id="postResultDiv">
-
+    <!-- carousel -->
+    <div id="myCarousel" class="shadow carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="first-slide"
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="First slide">
+                <!--th:src="@{/images/image1.jpeg}"-->
+                <!--src="/static/images/image1.jpeg"-->
+                <div class="container">
+                    <div class="carousel-caption text-left">
+                        <h1>Example headline</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
+                            porta
+                            gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="second-slide"
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="Second slide">
+                <!--th:src="@{/images/image2.jpeg}"-->
+                <!--src="/static/images/image2.jpeg"-->
+                <div class="container">
+                    <div class="carousel-caption">
+                        <h1>Another example headline.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
+                            porta
+                            gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Learn more</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="third-slide"
+                     src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+                     alt="Third slide">
+                <div class="container">
+                    <div class="carousel-caption text-right">
+                        <h1>One more for good measure.</h1>
+                        <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
+                            porta
+                            gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                        <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
 
-    <footer th:replace="/fragments/fragments.html :: footer"></footer>
+    <!-- testimonials -->
+    <div class="container marketing">
+        <div class="row">
+            <h2 class="col mb-5 text-center">Testimonials</h2>
+        </div>
 
-</form>
+        <div class="row d-flex justify-content-around mb-5" th:unless="${#lists.isEmpty(testimonials)}">
+            <div class="shadow col-lg-3 card mb-2" th:each="testimonial : ${testimonials}">
+                <blockquote class="card-body blockquote text-center">
+                    <p class="small" th:text="${testimonial.content}"></p>
+                    <div class="mx-auto my-4 border blockquote-spacer"></div>
+                    <footer class="blockquote-footer" th:text="${testimonial.poster}"></footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <!-- contact us form -->
+    <div class="container shadow">
+        <div class="row">
+            <div class="col-md-7">
+                <form class="form-group" id="contactUsForm" th:action="@{/submitContactForm}"
+                      th:object="${contactForm}" method="post">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 font-weight-normal">Ask us a Question</h1>
+                    </div>
+
+                    <div class="form-label-group">
+                        <input type="text" id="contactName" class="form-control" placeholder="Name" th:field="*{name}"
+                               required>
+                        <label for="contactName">Name</label>
+                    </div>
+
+                    <div class="form-label-group">
+                        <input type="email" id="contactEmail" class="form-control" placeholder="Email address"
+                               th:field="*{email}" required>
+                        <label for="contactEmail">Email address</label>
+                        <small class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+
+                    <div class="form-label-group">
+                    <textarea id="contactMessage" class="form-control" th:field="*{message}"
+                              rows="7" placeholder="Inquiry" required></textarea>
+                    </div>
+
+                    <!--<input type="file" class="form-control-file" id="exampleFormControlFile1">-->
+                    <!--<label for="exampleFormControlFile1">-->
+                    <!--<small class="form-text text-muted">Attachments (jpeg, png)</small>-->
+                    <!--</label>-->
+
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                    <div id="postResultDiv"></div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <div class="p-3 mb-3 bg-light rounded">
+                    <h4 class="font-italic">Remember...</h4>
+                    <p class="mb-0">Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur
+                        purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer th:replace="/fragments/fragments.html :: footer"></footer>
+</main>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 <script th:src="@{/scripts/submitContactForm.js}"></script>
 </body>
 </html>
