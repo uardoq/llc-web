@@ -15,8 +15,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +49,12 @@ public class HomeController {
         List<Testimonial> testimonials = testimonialsService.getAllTestimonials();
         if (!testimonials.isEmpty()) {
             model.addAttribute("testimonials", testimonials);
-            // this ContactForm object gets bound to the contact form
+            // this ContactForm object gets bound to the form element in the html
             model.addAttribute("contactForm", new ContactForm());
         }
         // render view
         return "homepage";
     }
-
 
     /**
      * Handle client request made when they submit a contact form.
@@ -56,13 +62,27 @@ public class HomeController {
      * @return if input is valid return 200, else return 422 and FieldErrors
      */
     @ResponseBody
-    @PostMapping(path = {"/submitContactForm"}, produces = "application/json; charset=UTF-8")
+    @PostMapping(path = {"/submitContactForm"}, consumes = {"multipart/form-data"}, produces = "application/json; charset=UTF-8")
     public ResponseEntity<?> submitContactForm(
-            @Valid @RequestBody ContactForm contactForm,
-            BindingResult bindingResult) {
+            /*@Valid @RequestBody ContactForm contactForm,*/
+            @RequestParam("files[]") MultipartFile multipartFile
+            /*BindingResult bindingResult*/) {
 
+        try {
+            String ctype = multipartFile.getContentType();
+            String name = multipartFile.getOriginalFilename();
+            // currently it saves the image to our root directory,
+            // TODO: save to a filesystem instead
+            BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            // TODO: parse type out of ctype
+            ImageIO.write(bufferedImage, "jpg", new File(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+/*
         if (bindingResult.hasErrors()) {
-            /* client input does not pass validation, set error 422 UNPROCESSABLE_ENTITY */
+            *//* client input does not pass validation, set error 422 UNPROCESSABLE_ENTITY *//*
             System.out.println("From submitContactForm(): 422, " + contactForm.toString());
             return new ResponseEntity<>(getErrorsInASaneFormat(bindingResult), HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
@@ -74,6 +94,9 @@ public class HomeController {
             // client expects json, so pass in an empty object
             return new ResponseEntity<>("{}", HttpStatus.OK);
         }
+        */
+
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 
     /**

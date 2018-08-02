@@ -53,7 +53,7 @@ public class ContactForm {
 
     @NotNull(message = "Please write an inquiry")
     @Size(min = 80, message = "Inquiry is too short")
-    @Column(nullable =false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     public String getMessage() {
         return message;
     }

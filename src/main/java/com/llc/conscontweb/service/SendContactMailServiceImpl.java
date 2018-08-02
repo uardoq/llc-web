@@ -40,7 +40,7 @@ public class SendContactMailServiceImpl implements SendContactMailService {
             // add attachment
             // TODO: only add attachment if contactForm.getFiles() returns images
 //            FileSystemResource fileSystemResource = new FileSystemResource(
-//                    new File("/home/edqu/Projects/conscontweb/src/main/resources/static/images/image1.jpeg"));
+//                    new File("/home/edqu/Projects/conscontweb/src/main/resources/static/images/image11.jpeg"));
 //            mimeMessageHelper.addAttachment("cool_image.jpg", fileSystemResource);
 
             // send message

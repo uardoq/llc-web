@@ -29,8 +29,8 @@
                 <img class="first-slide"
                      src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                      alt="First slide">
-                <!--th:src="@{/images/image1.jpeg}"-->
-                <!--src="/static/images/image1.jpeg"-->
+                <!--th:src="@{/images/image11.jpeg}"-->
+                <!--src="/static/images/image11.jpeg"-->
                 <div class="container">
                     <div class="carousel-caption text-left">
                         <h1>Example headline</h1>
@@ -45,8 +45,8 @@
                 <img class="second-slide"
                      src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                      alt="Second slide">
-                <!--th:src="@{/images/image2.jpeg}"-->
-                <!--src="/static/images/image2.jpeg"-->
+                <!--th:src="@{/images/image12.jpeg}"-->
+                <!--src="/static/images/image12.jpeg"-->
                 <div class="container">
                     <div class="carousel-caption">
                         <h1>Another example headline.</h1>
@@ -127,10 +127,10 @@
                               rows="7" placeholder="Inquiry" required></textarea>
                     </div>
 
-                    <!--<input type="file" class="form-control-file" id="exampleFormControlFile1">-->
-                    <!--<label for="exampleFormControlFile1">-->
-                    <!--<small class="form-text text-muted">Attachments (jpeg, png)</small>-->
-                    <!--</label>-->
+                    <input type="file" class="form-control-file" id="contactFiles" name="files[]" multiple>
+                    <label for="contactFiles">
+                        <small class="form-text text-muted">Attachments (jpg, png)</small>
+                    </label>
 
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
                     <div id="postResultDiv"></div>

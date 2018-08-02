@@ -42,20 +42,38 @@ $(document).ready(function () {
             $("#postResultDiv").html(errorHTML);
         };
 
-        // get form values
-        const formData = {
-            name: $("#contactName").val().trim(),
-            email: $("#contactEmail").val().trim(),
-            message: $("#contactMessage").val().trim()
-        };
+        var formData = new FormData();
+        // formData.append("name", $("#contactName").val().trim());
+        // formData.append("email", $("#contactEmail").val().trim());
+        // formData.append("message", $("#contactMessage").val().trim());
+
+        const contactFiles = $("#contactFiles").prop("files");
+        for (let i = 0, len = contactFiles.length; i < len; i++) {
+            let file = contactFiles[i];
+            // only add images
+            if (!file.type.match('image.*')) {
+                continue;
+            }
+            // add file under key files[]
+            formData.append('files[]', file, file.name);
+        }
+
+        for (let p of formData) {
+            console.log(p);
+        }
 
         // post request
         $.ajax({
             type: "POST",
-            contentType: "application/json",
+            // using multipart form-data because we cannot send an image using json
+            // contentType: "multipart/form-data",
+            // contentType: "application/json",
+            processData: false,
+            contentType: false,
             url: window.location + "submitContactForm",
-            data: JSON.stringify(formData),
-            dataType: 'json',
+            data: formData,
+            // processData must be set to false so jquery does not try to convert formData into a String (default action).
+            // dataType: 'json',
             success: onSuccess,
             error: onError
         });

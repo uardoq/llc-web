@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/cards-gallery.css}">
+    <!--<link rel="stylesheet" th:href="@{/css/carousel.css}">-->
+    <!--<link rel="stylesheet" th:href="@{/css/floating_labels.css}">-->
+    <!--<link rel="stylesheet" th:href="@{/css/styles.css}">-->
+    <title>Gallery</title>
+</head>
+<body>
+
+<section class="gallery-block cards-gallery">
+    <div class="container">
+        <div class="heading">
+            <h2>Cards Gallery</h2>
+        </div>
+        <div class="row" th:unless="${#lists.isEmpty(images)}">
+
+            <div class="col-md-6 col-lg-4" th:each="image : ${images}">
+                <div class="card border-0 transform-on-hover">
+                    <a class="lightbox" th:href="${image}">
+                        <img th:src="${image}" alt="Card Image" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h6><a href="#">Lorem Ipsum</a></h6>
+                        <p class="text-muted card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                            quam urna.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script>
+    baguetteBox.run('.cards-gallery', {animation: 'slideIn'});
+</script>
+
+</body>
+</html>
