@@ -3,6 +3,8 @@ package com.llc.conscontweb.controller;
 import com.llc.conscontweb.model.ContactForm;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 /**
  * composite of a ContactForm and any attachments
  * this class exists so we can keep the ContactForm entity data separated from the attachment
@@ -11,18 +13,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class ContactFormWithAttachments {
 
     private final ContactForm contactForm;
-    private final MultipartFile multipartFile;
+    private final File file;
 
-    public ContactFormWithAttachments(ContactForm contactForm, MultipartFile multipartFile) {
+    public ContactFormWithAttachments(ContactForm contactForm, File file) {
         this.contactForm = contactForm;
-        this.multipartFile = multipartFile;
+        this.file = file;
     }
 
     public ContactForm getContactForm() {
         return contactForm;
     }
 
-    public MultipartFile getMultipartFile() {
-        return multipartFile;
+    public File getFile() {
+        return file;
     }
 }

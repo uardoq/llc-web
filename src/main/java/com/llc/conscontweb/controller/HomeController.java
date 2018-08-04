@@ -1,5 +1,6 @@
 package com.llc.conscontweb.controller;
 
+import com.llc.conscontweb.helpers.CCWHelpers;
 import com.llc.conscontweb.model.ContactForm;
 import com.llc.conscontweb.model.Testimonial;
 import com.llc.conscontweb.service.ContactService;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,13 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import javax.validation.Valid;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -34,13 +30,15 @@ public class HomeController {
     private TestimonialsService testimonialsService;
     private ContactService contactService;
     private SendContactMailService sendContactMailService;
+    private CCWHelpers helpers;
 
     /* Constructor Dependency Injection */
     @Autowired
-    public HomeController(TestimonialsService testimonialsService, ContactService contactService, SendContactMailService sendContactMailService) {
+    public HomeController(TestimonialsService testimonialsService, ContactService contactService, SendContactMailService sendContactMailService, CCWHelpers helpers) {
         this.testimonialsService = testimonialsService;
         this.contactService = contactService;
         this.sendContactMailService = sendContactMailService;
+        this.helpers = helpers;
     }
 
     @GetMapping(path = {"/"})
@@ -64,50 +62,52 @@ public class HomeController {
     @ResponseBody
     @PostMapping(path = {"/submitContactForm"}, consumes = {"multipart/form-data"}, produces = "application/json; charset=UTF-8")
     public ResponseEntity<?> submitContactForm(
-            /*@Valid @RequestBody ContactForm contactForm,*/
-            @RequestParam("files[]") MultipartFile multipartFile
-            /*BindingResult bindingResult*/) {
+            @Valid @ModelAttribute ContactForm contactForm,
+            @RequestParam(value = "files[]", required = false) MultipartFile multipartFile,
+            BindingResult bindingResult) {
 
-        try {
-            String ctype = multipartFile.getContentType();
-            String name = multipartFile.getOriginalFilename();
-            // currently it saves the image to our root directory,
-            // TODO: save to a filesystem instead
-            BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
-            // TODO: parse type out of ctype
-            ImageIO.write(bufferedImage, "jpg", new File(name));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-/*
         if (bindingResult.hasErrors()) {
-            *//* client input does not pass validation, set error 422 UNPROCESSABLE_ENTITY *//*
+            // client input does not pass validation, set error 422 UNPROCESSABLE_ENTITY
             System.out.println("From submitContactForm(): 422, " + contactForm.toString());
-            return new ResponseEntity<>(getErrorsInASaneFormat(bindingResult), HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(helpers.getErrorsInASaneFormat(bindingResult), HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
             // validation passes, call ContactService
             System.out.println("From submitContactForm(): processing contact form");
             System.out.println("From submitContactForm(): 200, " + contactForm.toString());
             contactService.processContactForm(contactForm);
-            sendContactMailService.notifyUs(contactForm);
+
+            if (multipartFile == null) {
+                // no file uploaded
+                sendContactMailService.notifyUs(contactForm);
+            } else {
+                try {
+                    // get image file
+                    String fileExtension = helpers.readTypeFromSignature(multipartFile.getBytes());
+                    if (fileExtension == null) {
+                        return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+                    } else {
+                        String filename = multipartFile.getOriginalFilename();
+                        // if file does not have a name, fallback to epoch time for the name
+                        filename = (filename == null || filename.equals("")) ? String.valueOf(System.currentTimeMillis()) : filename;
+                        File file = new File(filename);
+                        BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+                        ImageIO.write(bufferedImage, fileExtension, file);
+
+                        // send email
+                        sendContactMailService.notifyUs(new ContactFormWithAttachments(contactForm, file));
+
+                        // delete file
+                        file.delete();
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             // client expects json, so pass in an empty object
             return new ResponseEntity<>("{}", HttpStatus.OK);
         }
-        */
-
-        return new ResponseEntity<>("{}", HttpStatus.OK);
-    }
-
-    /**
-     * Returns a map of the fields as keys and error description as values.
-     */
-    private Map<String, String> getErrorsInASaneFormat(final BindingResult result) {
-        return new HashMap<String, String>() {{
-            for (FieldError error : result.getFieldErrors()) {
-                put(error.getField(), error.getDefaultMessage());
-            }
-        }};
     }
 
     /**

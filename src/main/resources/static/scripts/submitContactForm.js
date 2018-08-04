@@ -43,9 +43,10 @@ $(document).ready(function () {
         };
 
         var formData = new FormData();
-        // formData.append("name", $("#contactName").val().trim());
-        // formData.append("email", $("#contactEmail").val().trim());
-        // formData.append("message", $("#contactMessage").val().trim());
+
+        formData.append("name", $("#contactName").val().trim());
+        formData.append("email", $("#contactEmail").val().trim());
+        formData.append("message", $("#contactMessage").val().trim());
 
         const contactFiles = $("#contactFiles").prop("files");
         for (let i = 0, len = contactFiles.length; i < len; i++) {
@@ -70,7 +71,7 @@ $(document).ready(function () {
             // contentType: "application/json",
             processData: false,
             contentType: false,
-            url: window.location + "submitContactForm",
+            url: "/submitContactForm",
             data: formData,
             // processData must be set to false so jquery does not try to convert formData into a String (default action).
             // dataType: 'json',

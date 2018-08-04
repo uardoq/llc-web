@@ -1,11 +1,13 @@
 package com.llc.conscontweb;
 
+import com.llc.conscontweb.helpers.CCWHelpers;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @SpringBootApplication
@@ -27,5 +29,9 @@ public class ConscontwebApplication {
         return messageSource;
     }
 
+    @Bean
+    public CCWHelpers ccwHelpers() {
+        return CCWHelpers.getInstance();
+    }
 
 }
