@@ -1,8 +1,18 @@
 package com.llc.conscontweb.helpers;
 
+import com.llc.conscontweb.controller.ContactFormWithAttachments;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.UnsupportedMediaTypeStatusException;
+import sun.reflect.annotation.ExceptionProxy;
 
+import javax.activation.UnsupportedDataTypeException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +55,34 @@ public class CCWHelpers {
             }
         }
         return true;
+    }
+
+    public File processMultipartImageFile(MultipartFile multipartFile) {
+
+        String filename = multipartFile.getOriginalFilename();
+        if (filename == null || filename.equals("")) {
+            // if file does not have a name, fallback to epoch time for the name
+            filename = String.valueOf(System.currentTimeMillis());
+        }
+        File tempFile;
+        final String fileExtension;
+        final BufferedImage bufferedImage;
+
+        try {
+            final byte[] bytes = multipartFile.getBytes();
+            if ((fileExtension = this.readTypeFromSignature(bytes)) == null) {
+                throw new UnsupportedDataTypeException("Image type not PNG/JPG");
+            }
+            // save file to /tmp/
+            bufferedImage = ImageIO.read(multipartFile.getInputStream());
+            tempFile = new File("/tmp/" + filename);
+            ImageIO.write(bufferedImage, fileExtension, tempFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return tempFile;
     }
 
     /**

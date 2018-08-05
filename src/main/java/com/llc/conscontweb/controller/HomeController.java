@@ -17,11 +17,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -63,7 +61,7 @@ public class HomeController {
     @PostMapping(path = {"/submitContactForm"}, consumes = {"multipart/form-data"}, produces = "application/json; charset=UTF-8")
     public ResponseEntity<?> submitContactForm(
             @Valid @ModelAttribute ContactForm contactForm,
-            @RequestParam(value = "files[]", required = false) MultipartFile multipartFile,
+            @RequestParam(value = "files[]", required = false) MultipartFile[] multipartFiles,
             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -71,42 +69,48 @@ public class HomeController {
             System.out.println("From submitContactForm(): 422, " + contactForm.toString());
             return new ResponseEntity<>(helpers.getErrorsInASaneFormat(bindingResult), HttpStatus.UNPROCESSABLE_ENTITY);
         } else {
-            // validation passes, call ContactService
+            // validation passes, process contact form
             System.out.println("From submitContactForm(): processing contact form");
             System.out.println("From submitContactForm(): 200, " + contactForm.toString());
+
+            // save the contact form to our database
             contactService.processContactForm(contactForm);
 
-            if (multipartFile == null) {
-                // no file uploaded
+            // check if client uploaded files along with their form
+            if (multipartFiles == null) {
+                // no files uploaded, send email without attachments
                 sendContactMailService.notifyUs(contactForm);
-            } else {
-                try {
-                    // get image file
-                    String fileExtension = helpers.readTypeFromSignature(multipartFile.getBytes());
-                    if (fileExtension == null) {
-                        return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-                    } else {
-                        String filename = multipartFile.getOriginalFilename();
-                        // if file does not have a name, fallback to epoch time for the name
-                        filename = (filename == null || filename.equals("")) ? String.valueOf(System.currentTimeMillis()) : filename;
-                        File file = new File(filename);
-                        BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
-                        ImageIO.write(bufferedImage, fileExtension, file);
+                // client expects json, so pass in an empty object
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
 
-                        // send email
-                        sendContactMailService.notifyUs(new ContactFormWithAttachments(contactForm, file));
-
-                        // delete file
-                        file.delete();
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            // otherwise read uploaded client images
+            List<File> files = new ArrayList<>(multipartFiles.length);
+            for (MultipartFile multipartFile : multipartFiles) {
+                File file = helpers.processMultipartImageFile(multipartFile);
+                if (file != null) {
+                    // ignore unsupported files
+                    files.add(file);
                 }
             }
 
-            // client expects json, so pass in an empty object
-            return new ResponseEntity<>("{}", HttpStatus.OK);
+            if (files.size() == 0) {
+                // uploaded files are not supported file formats (see CCWHelpers.java)
+                return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+            }
+
+            // send email with attachments
+            sendContactMailService.notifyUs(new ContactFormWithAttachments(contactForm, files));
+
+            // clean up
+            for (File f : files) {
+                String fpath = f.getPath();
+                if (!f.delete()) {
+                    System.out.println("could not delete " + fpath);
+                }
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 

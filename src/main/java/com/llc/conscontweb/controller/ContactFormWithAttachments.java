@@ -1,9 +1,9 @@
 package com.llc.conscontweb.controller;
 
 import com.llc.conscontweb.model.ContactForm;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * composite of a ContactForm and any attachments
@@ -13,18 +13,18 @@ import java.io.File;
 public class ContactFormWithAttachments {
 
     private final ContactForm contactForm;
-    private final File file;
+    private final List<File> files;
 
-    public ContactFormWithAttachments(ContactForm contactForm, File file) {
+    ContactFormWithAttachments(ContactForm contactForm, List<File> files) {
         this.contactForm = contactForm;
-        this.file = file;
+        this.files = files;
     }
 
     public ContactForm getContactForm() {
         return contactForm;
     }
 
-    public File getFile() {
-        return file;
+    public List<File> getFiles() {
+        return files;
     }
 }

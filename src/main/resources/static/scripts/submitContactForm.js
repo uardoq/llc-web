@@ -66,15 +66,11 @@ $(document).ready(function () {
         // post request
         $.ajax({
             type: "POST",
-            // using multipart form-data because we cannot send an image using json
-            // contentType: "multipart/form-data",
-            // contentType: "application/json",
+            // processData must be set to false so jquery does not try to convert formData into a String (default action).
             processData: false,
             contentType: false,
             url: "/submitContactForm",
             data: formData,
-            // processData must be set to false so jquery does not try to convert formData into a String (default action).
-            // dataType: 'json',
             success: onSuccess,
             error: onError
         });

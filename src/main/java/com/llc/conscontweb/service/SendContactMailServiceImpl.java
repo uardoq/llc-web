@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.util.List;
 
 @Service
 public class SendContactMailServiceImpl implements SendContactMailService {
@@ -24,7 +26,7 @@ public class SendContactMailServiceImpl implements SendContactMailService {
         this.javaMailSender = javaMailSender;
     }
 
-    private MimeMessageHelper buildBasicMessage(String to, String subject, String message, boolean hasAttachment) throws MessagingException {
+    private MimeMessageHelper buildBaseMessage(String to, String subject, String message, boolean hasAttachment) throws MessagingException {
         // send us an email with the clients message
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         // set to true because we will send a multi part message
@@ -39,7 +41,7 @@ public class SendContactMailServiceImpl implements SendContactMailService {
     public void notifyUs(ContactForm contactForm) {
 
         try {
-            MimeMessageHelper mimeMessageHelper = buildBasicMessage(email,
+            MimeMessageHelper mimeMessageHelper = buildBaseMessage(email,
                     "[QUESTION] from : " + contactForm.getName(),
                     "Name: " + contactForm.getName() + "\n" +
                             "Email: " + contactForm.getEmail() + "\n" +
@@ -58,7 +60,7 @@ public class SendContactMailServiceImpl implements SendContactMailService {
         ContactForm contactForm = contactFormWithAttachments.getContactForm();
 
         try {
-            MimeMessageHelper mimeMessageHelper = buildBasicMessage(email,
+            MimeMessageHelper mimeMessageHelper = buildBaseMessage(email,
                     "[QUESTION] from : " + contactForm.getName(),
                     "Name: " + contactForm.getName() + "\n" +
                             "Email: " + contactForm.getEmail() + "\n" +
@@ -67,8 +69,14 @@ public class SendContactMailServiceImpl implements SendContactMailService {
 
             // add attachment
             // TODO: only add attachment if contactForm.getFiles() returns images
-            FileSystemResource fileSystemResource = new FileSystemResource(contactFormWithAttachments.getFile());
-            mimeMessageHelper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
+
+            // add all image files
+            List<File> files = contactFormWithAttachments.getFiles();
+            for (File file : files) {
+                FileSystemResource fileSystemResource = new FileSystemResource(file);
+                mimeMessageHelper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
+            }
+
             // send
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
 
