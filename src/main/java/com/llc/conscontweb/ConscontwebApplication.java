@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
+@PropertySource("classpath:messages.properties")
 @SpringBootApplication
 public class ConscontwebApplication {
 

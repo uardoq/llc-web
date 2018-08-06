@@ -13,6 +13,7 @@ $(document).ready(function () {
             $("#contactName").val("");
             $("#contactEmail").val("");
             $("#contactMessage").val("");
+            $("#contactFiles").val("");
         }
 
         const onSuccess = function () {

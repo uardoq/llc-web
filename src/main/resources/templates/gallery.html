@@ -22,8 +22,8 @@
 
             <div class="col-md-6 col-lg-4" th:each="image : ${images}">
                 <div class="card border-0 transform-on-hover">
-                    <a class="lightbox" th:href="${image}">
-                        <img th:src="${image}" alt="Card Image" class="card-img-top">
+                    <a class="lightbox" th:href="${image.getPath()}">
+                        <img th:src="${image.getPath()}" alt="Card Image" class="card-img-top">
                     </a>
                     <div class="card-body">
                         <h6><a href="#">Lorem Ipsum</a></h6>
