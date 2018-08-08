@@ -159,5 +159,31 @@
 
 </footer>
 
+<!-- pagination -->
+<nav th:fragment="gallery-nav-bar">
+    <ul class="pagination pg-blue justify-content-center">
+        <!-- previous page -->
+        <li class="page-item">
+            <a class="page-link" aria-label="Previous" th:href="@{/gallery(page=${currentPage} - 1)}">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <!-- Pages -->
+        <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${currentPage}==${page}?'active':''">
+            <a class="page-link" th:href="@{/gallery(page=${page})}" th:text="${page}"></a>
+        </li>
+        <!-- next page -->
+        <li class="page-item" >
+            <a class="page-link" aria-label="Next" th:href="@{/gallery(page=${currentPage} + 1)}">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
 </body>
 </html>

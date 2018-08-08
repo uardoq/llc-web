@@ -4,6 +4,7 @@ import com.llc.conscontweb.model.GalleryImage;
 import com.llc.conscontweb.service.GalleryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +27,18 @@ public class GalleryController {
     @GetMapping(path = "/gallery")
     public String showGalleryPage(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
 
-        List<GalleryImage> galleryURIs = galleryService.getGalleryURIs(page, pageSize).getContent();
-        model.addAttribute("images", galleryURIs);
-        model.addAttribute("pageNumber", page);
+        // guard for non existent pages
+        page = page < 0 ? 0 : page;
+
+        Page<GalleryImage> galleryURIs = galleryService.getGalleryURIs(page, pageSize);
+        List<GalleryImage> images = galleryURIs.getContent();
+        int totalPages = galleryURIs.getTotalPages();
+
+        page = page > totalPages ? totalPages : page;
+
+        model.addAttribute("images", images);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         // load images temporarily
         return "gallery";

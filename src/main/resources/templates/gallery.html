@@ -15,11 +15,16 @@
 
 <section class="gallery-block cards-gallery">
     <div class="container">
+
         <div class="heading">
             <h2>Gallery</h2>
         </div>
-        <div class="row" th:unless="${#lists.isEmpty(images)}">
 
+        <!-- pagination bar -->
+        <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
+
+        <!-- gallery photos -->
+        <div class="row" th:unless="${#lists.isEmpty(images)}">
             <div class="col-md-6 col-lg-4" th:each="image : ${images}">
                 <div class="card border-0 transform-on-hover">
                     <a class="lightbox" th:href="${image.getPath()}">
@@ -32,8 +37,11 @@
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <!-- pagination bar -->
+        <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
+
     </div>
 </section>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
