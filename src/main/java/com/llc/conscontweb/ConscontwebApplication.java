@@ -9,13 +9,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @PropertySource("classpath:messages.properties")
 @SpringBootApplication
-public class ConscontwebApplication {
+public class ConscontwebApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
         SpringApplication.run(ConscontwebApplication.class, args);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("/webjars/");
     }
 
     @Bean
