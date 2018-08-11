@@ -5,13 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-
 <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
     <tr>
-        <td align="center" valign="top">
+        <td align="left" valign="top">
             <table border="0" cellpadding="20" cellspacing="0" width="600" id="emailContainer">
                 <tr>
-                    <td align="center" valign="top">
+                    <td align="left" valign="top">
                         <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailHeader">
                             <tr>
                                 <td align="center" valign="top">
@@ -22,26 +21,48 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="center" valign="top">
+                    <td align="left" valign="top">
                         <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailBody">
                             <tr>
                                 <td align="center" valign="top">
-                                    <p th:text="${contactForm.name}"><span>Name: </span></p>
-                                    <p th:text="${contactForm.email}"></p>
-                                    <p th:text="${contactForm.message}">
-                                        customer message
-                                    </p>
+                                    <div>
+                                        <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <span>Customer Name: </span>
+                                                </td>
+                                                <td align="center" valign="top">
+                                                    <p th:text="${contactForm.name}"></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <span>Customer Email: </span>
+                                                </td>
+                                                <td align="center" valign="top">
+                                                    <p th:text="${contactForm.email}"></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">
+                                                    <span>Customer Message: </span>
+                                                </td>
+                                                <td align="center" valign="top">
+                                                    <p th:text="${contactForm.message}"></p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td align="center" valign="top">
+                    <td align="left" valign="top">
                         <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailFooter">
                             <tr>
                                 <td align="center" valign="top">
-                                    <img src="/static/images/signatureImage.png" alt="">
                                     <p>constcontweb</p>
                                     <p>constcontsite@gmail.com</p>
                                     <p>123-345-6789</p>

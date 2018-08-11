@@ -1,26 +1,21 @@
 package com.llc.conscontweb.service;
 
-import com.llc.conscontweb.model.ContactFormWithAttachments;
 import com.llc.conscontweb.model.ContactForm;
+import com.llc.conscontweb.model.ContactFormWithAttachments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import org.thymeleaf.context.Context;
 
 @Service
 public class SendContactMailServiceImpl implements SendContactMailService {
@@ -30,8 +25,6 @@ public class SendContactMailServiceImpl implements SendContactMailService {
     private final TemplateEngine templateEngine;
     @Value("${spring.mail.username}")
     private String email;
-    @Value("${site.email.signatureImagePath}")
-    private String signatureImagePath;
 
     @Autowired
     public SendContactMailServiceImpl(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
@@ -39,13 +32,12 @@ public class SendContactMailServiceImpl implements SendContactMailService {
         this.templateEngine = templateEngine;
     }
 
-    private MimeMessageHelper buildBaseMessage(ContactForm contactForm, boolean hasAttachment) throws MessagingException, IOException {
+    private MimeMessageHelper buildBaseMessage(ContactForm contactForm, boolean hasAttachment) throws MessagingException {
 
         // set variables for template
         final Context ctx = new Context(Locale.getDefault());
         ctx.setVariable("contactForm", contactForm);
         String content = templateEngine.process("email_templates/email-simple", ctx);
-        File signatureImage = new ClassPathResource(signatureImagePath).getFile();
 
         // send us an email with the clients message
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -54,18 +46,17 @@ public class SendContactMailServiceImpl implements SendContactMailService {
         mimeMessageHelper.setTo(email);
         mimeMessageHelper.setSubject("[QUESTION] from: " + contactForm.getName());
         mimeMessageHelper.setText(content, true);
-        mimeMessageHelper.addAttachment(signatureImage.getName(), signatureImage);
         return mimeMessageHelper;
     }
 
     @Override
     public void notifyUs(ContactForm contactForm) {
         try {
-            MimeMessageHelper mimeMessageHelper = buildBaseMessage(contactForm, true);
+            MimeMessageHelper mimeMessageHelper = buildBaseMessage(contactForm, false);
 
             // send message
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
-        } catch (MessagingException | IOException e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
@@ -87,7 +78,7 @@ public class SendContactMailServiceImpl implements SendContactMailService {
             // send
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
 
-        } catch (MessagingException | IOException e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
 
