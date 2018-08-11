@@ -2,6 +2,7 @@ package com.llc.conscontweb.controller;
 
 import com.llc.conscontweb.helpers.CCWHelpers;
 import com.llc.conscontweb.model.ContactForm;
+import com.llc.conscontweb.model.ContactFormWithAttachments;
 import com.llc.conscontweb.model.Testimonial;
 import com.llc.conscontweb.service.ContactService;
 import com.llc.conscontweb.service.SendContactMailService;
@@ -77,7 +78,7 @@ public class HomeController {
             contactService.processContactForm(contactForm);
 
             // check if client uploaded files along with their form
-            if (multipartFiles == null) {
+            if (multipartFiles.length == 0) {
                 // no files uploaded, send email without attachments
                 sendContactMailService.notifyUs(contactForm);
                 // client expects json, so pass in an empty object

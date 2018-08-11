@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Template for HTML email (simple)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+    <tr>
+        <td align="center" valign="top">
+            <table border="0" cellpadding="20" cellspacing="0" width="600" id="emailContainer">
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailHeader">
+                            <tr>
+                                <td align="center" valign="top">
+                                    <h1>Email from Client</h1>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailBody">
+                            <tr>
+                                <td align="center" valign="top">
+                                    <p th:text="${contactForm.name}"><span>Name: </span></p>
+                                    <p th:text="${contactForm.email}"></p>
+                                    <p th:text="${contactForm.message}">
+                                        customer message
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top">
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%" id="emailFooter">
+                            <tr>
+                                <td align="center" valign="top">
+                                    <img src="/static/images/signatureImage.png" alt="">
+                                    <p>constcontweb</p>
+                                    <p>constcontsite@gmail.com</p>
+                                    <p>123-345-6789</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

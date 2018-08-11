@@ -1,6 +1,4 @@
-package com.llc.conscontweb.controller;
-
-import com.llc.conscontweb.model.ContactForm;
+package com.llc.conscontweb.model;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +13,7 @@ public class ContactFormWithAttachments {
     private final ContactForm contactForm;
     private final List<File> files;
 
-    ContactFormWithAttachments(ContactForm contactForm, List<File> files) {
+    public ContactFormWithAttachments(ContactForm contactForm, List<File> files) {
         this.contactForm = contactForm;
         this.files = files;
     }

@@ -1,18 +1,14 @@
 package com.llc.conscontweb.helpers;
 
-import com.llc.conscontweb.controller.ContactFormWithAttachments;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.UnsupportedMediaTypeStatusException;
-import sun.reflect.annotation.ExceptionProxy;
 
 import javax.activation.UnsupportedDataTypeException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 

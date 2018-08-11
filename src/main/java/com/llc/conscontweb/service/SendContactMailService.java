@@ -1,6 +1,6 @@
 package com.llc.conscontweb.service;
 
-import com.llc.conscontweb.controller.ContactFormWithAttachments;
+import com.llc.conscontweb.model.ContactFormWithAttachments;
 import com.llc.conscontweb.model.ContactForm;
 
 public interface SendContactMailService {
