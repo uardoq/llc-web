@@ -11,39 +11,45 @@
 </head>
 <body>
 
-<section class="gallery-block cards-gallery">
-    <div class="container">
+<main role="main">
+    <header th:replace="/fragments/fragments.html :: header"></header>
+    <section class="gallery-block cards-gallery">
+        <div class="container">
 
-        <div class="heading">
-            <h2>Gallery</h2>
-        </div>
+            <div class="heading">
+                <h2>Gallery</h2>
+            </div>
 
-        <!-- pagination bar -->
-        <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
+            <!-- pagination bar -->
+            <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
 
-        <!-- gallery photos -->
-        <div class="row" th:unless="${#lists.isEmpty(images)}">
-            <div class="col-md-6 col-lg-4" th:each="image : ${images}">
-                <div class="card border-0 transform-on-hover">
-                    <a class="lightbox" th:href="${image.getPath()}">
-                        <img th:src="${image.getPath()}" alt="Card Image" class="card-img-top">
-                    </a>
-                    <div class="card-body">
-                        <h6><a href="#">Lorem Ipsum</a></h6>
-                        <p class="text-muted card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                            quam urna.</p>
+            <!-- gallery photos -->
+            <div class="row" th:unless="${#lists.isEmpty(images)}">
+                <div class="col-md-6 col-lg-4" th:each="image : ${images}">
+                    <div class="card border-0 transform-on-hover">
+                        <a class="lightbox" th:href="${image.getPath()}">
+                            <img th:src="${image.getPath()}" alt="Card Image" class="card-img-top">
+                        </a>
+                        <div class="card-body">
+                            <h6><a href="#">Lorem Ipsum</a></h6>
+                            <p class="text-muted card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Nunc
+                                quam urna.</p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- pagination bar -->
+            <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
+
         </div>
+    </section>
+    <footer th:replace="/fragments/fragments.html :: footer"></footer>
 
-        <!-- pagination bar -->
-        <nav th:replace="/fragments/fragments.html :: gallery-nav-bar"></nav>
-
-    </div>
-</section>
+</main>
 <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
-<script th:src="@{/webjars/popper/1.14.3/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.14.3/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/4.1.3/js/bootstrap.min.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
 <script>
